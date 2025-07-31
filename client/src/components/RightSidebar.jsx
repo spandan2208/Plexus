@@ -4,7 +4,7 @@ const RightSidebar = () => {
   return (
     <div>
         <h1>
-            RightSidebar
+            RightSidebar hello
         </h1>
     </div>
   )
