@@ -10,6 +10,27 @@ const LoginPage = () => {
   const [bio, setBio] = useState('');
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
 
+  const onSubmitHandler = (e) => {
+  e.preventDefault();
+
+  if (currState === 'Sign up') {
+    if (!isDataSubmitted) {
+      setIsDataSubmitted(true);
+    } else {
+      
+      console.log("Sign-Up Data:", { fullName, email, password, bio });
+      alert("Account created successfully!");
+     
+    }
+  } else {
+    
+    console.log("Logging in with:", { email, password });
+    alert("Logged in successfully!");
+    
+  }
+};
+
+
   const isFlipped = currState === 'Log in';
 
   return (
@@ -20,9 +41,11 @@ const LoginPage = () => {
         <div className={`flipper ${isFlipped ? 'flipped' : ''}`}>
 
           {/* Sign Up Form */}
-          <form className="form-card front">
-            <h2 className='text-2xl font-medium flex justify-between items-center'>{currState}
-              <img src={assets.arrow_icon} alt="" className='w-5 cursor-pointer' />
+          <form className="form-card front" onSubmit={onSubmitHandler}>
+            <h2 className='text-2xl font-medium flex justify-between items-center'>
+              {currState}
+              {isDataSubmitted && <img onClick={() => setIsDataSubmitted(false)} src={assets.arrow_icon} alt="" className='w-5 cursor-pointer' />
+              }
             </h2>
 
             <input onChange={(e) => setFullName(e.target.value)} value={fullName}
@@ -32,7 +55,12 @@ const LoginPage = () => {
               type="email" placeholder='Email Address' required className='form-input' />
 
             <input onChange={(e) => setPassword(e.target.value)} value={password}
-              type="password" placeholder='Password' required className='form-input' />
+              type="password" placeholder='Password' required className='form-input' />  
+
+              {currState === 'Sign up' && isDataSubmitted && (
+                <input onChange={(e) => setBio(e.target.value)} value={bio}
+                  type="text" className='form-input' placeholder='Bio...' required />
+              )}
 
             {!isDataSubmitted && (
               <div className='flex items-center gap-2 text-sm text-gray-300'>
@@ -49,7 +77,7 @@ const LoginPage = () => {
           </form>
 
           {/* Login Form */}
-          <form className="form-card back">
+          <form onSubmit={onSubmitHandler} className="form-card back">
             <h2 className='text-2xl font-medium flex justify-between items-center'>{currState}
               <img src={assets.arrow_icon} alt="" className='w-5 cursor-pointer' />
             </h2>
