@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import assets from '../assets/assets';
 import './LoginPage.css'; //  create this CSS file
+import { AuthContext } from '../../context/AuthContext';
 
 const LoginPage = () => {
   const [currState, setCurrState] = useState('Sign up');
@@ -10,24 +11,17 @@ const LoginPage = () => {
   const [bio, setBio] = useState('');
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
 
+  const {login} = useContext(AuthContext);
+
   const onSubmitHandler = (e) => {
   e.preventDefault();
 
-  if (currState === 'Sign up') {
-    if (!isDataSubmitted) {
+  if (currState === 'Sign up' && !isDataSubmitted) {
       setIsDataSubmitted(true);
-    } else {
-      
-      console.log("Sign-Up Data:", { fullName, email, password, bio });
-      alert("Account created successfully!");
-     
-    }
-  } else {
-    
-    console.log("Logging in with:", { email, password });
-    alert("Logged in successfully!");
-    
+      return;
   }
+
+  login(currState === 'Sign up' ? 'signup' : 'login', {fullName, email,password})
 };
 
 
