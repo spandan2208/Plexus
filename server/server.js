@@ -1,15 +1,25 @@
 import express from 'express';
 import "dotenv/config";
 import cors from 'cors';
-import http from 'http';
+// import http from 'http';
 import {connectDB} from './lib/db.js';
 import userRouter from './routes/userRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
 import { Server } from 'socket.io';
+import https from "https";
+import fs from "fs";
+
+// Load SSL certs (update paths based on your certbot/SSL location)
+const options = {
+  key: fs.readFileSync("/etc/letsencrypt/live/yourdomain.com/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/yourdomain.com/fullchain.pem"),
+};
+
+const server = https.createServer(options, app);
 
 //create Express app and HTTP server
 const app = express();
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 //setup socket.io
 const io = new Server(server, {
