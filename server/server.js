@@ -7,13 +7,6 @@ import userRouter from './routes/userRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
 import { Server } from 'socket.io';
 import https from "https";
-import fs from "fs";
-
-// Load SSL certs (update paths based on your certbot/SSL location)
-const options = {
-  key: fs.readFileSync("/etc/letsencrypt/live/yourdomain.com/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/yourdomain.com/fullchain.pem"),
-};
 
 const server = https.createServer(options, app);
 
