@@ -39,9 +39,10 @@ io.on("connection", (socket) => {
 //middleware setup
 app.use(express.json({limit: '6mb'}));
 app.use(cors({
-    origin: "http://localhost:5173",   // your frontend URL
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true
 }));
+
 
 
 //routes setup
