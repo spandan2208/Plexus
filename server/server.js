@@ -8,7 +8,7 @@ import messageRouter from './routes/messageRoutes.js';
 import { Server } from 'socket.io';
 import https from "https";
 
-const server = https.createServer(options, app);
+const server = https.createServer( app);
 
 //create Express app and HTTP server
 const app = express();
