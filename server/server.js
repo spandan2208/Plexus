@@ -37,8 +37,12 @@ io.on("connection", (socket) => {
 });
 
 //middleware setup
-app.use(express.json({limit: '4mb'}));
-app.use(cors());
+app.use(express.json({limit: '6mb'}));
+app.use(cors({
+    origin: "http://localhost:5173",   // your frontend URL
+    credentials: true
+}));
+
 
 //routes setup
 app.use("/api/status", (req, res) => res.send("Server is live"));
