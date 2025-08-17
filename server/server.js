@@ -1,59 +1,54 @@
 import express from 'express';
 import "dotenv/config";
 import cors from 'cors';
-// import http from 'http';
+import http from 'http'; 
 import {connectDB} from './lib/db.js';
 import userRouter from './routes/userRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
 import { Server } from 'socket.io';
-import https from "https";
 
 
-//create Express app and HTTP server
 const app = express();
-const server = https.createServer( app);
-// const server = http.createServer(app);
+const server = http.createServer(app);
 
-//setup socket.io
+// Socket.io setup
 const io = new Server(server, {
-    cors: {origin: "*"}
+cors: {origin: "*"}
 });
- // Store online users
+// Store online users
 export const userSocketMap = {};
 export { io };
-  // {userId: socketId}
+// {userId: socketId}
 
 io.on("connection", (socket) => {
-    const userId = socket.handshake.query.userId;
-    console.log("User connected: " , userId);
+const userId = socket.handshake.query.userId;
+console.log("User connected: " , userId);
 
-    if (userId) userSocketMap[userId] = socket.id;  
+if (userId) userSocketMap[userId] = socket.id;  
 
-    // Emit online users to all connected clients
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+// Emit online users to all connected clients
+io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-    socket.on("disconnect", () => {
-        console.log("User disconnected: ", userId);
-        delete userSocketMap[userId];  // Remove user from online users
-        io.emit("getOnlineUsers", Object.keys(userSocketMap));  // Emit updated online users
-    });
+socket.on("disconnect", () => {
+ console.log("User disconnected: ", userId);
+delete userSocketMap[userId];
+io.emit("getOnlineUsers", Object.keys(userSocketMap)); 
+ });
 });
 
-//middleware setup
+
 app.use(express.json({limit: '6mb'}));
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true
+origin: process.env.CLIENT_URL || "http://localhost:5173",
+credentials: true
 }));
 
-
-
-//routes setup
+// Routes
 app.use("/api/status", (req, res) => res.send("Server is live"));
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
 
-//Connect to mongoDB
+// MongoDB connect
 await connectDB();
 
 const PORT = process.env.PORT || 5000;
